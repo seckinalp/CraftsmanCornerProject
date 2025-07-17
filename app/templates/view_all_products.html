@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View All Products</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>All Products</h1>
+
+    <form method="POST" action="{{ url_for('product.view_all_products') }}">
+        <div>
+            <label for="product_type">Product Type:</label>
+            <select name="product_type" id="product_type">
+                <option value="">All</option>
+                {% for type in product_types %}
+                    <option value="{{ type.product_type }}" {% if type.product_type == selected_type %}selected{% endif %}>
+                        {{ type.product_type }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="product_gender">Gender:</label>
+            <select name="product_gender" id="product_gender">
+                <option value="">All</option>
+                {% for gender in product_genders %}
+                    <option value="{{ gender.product_gender }}" {% if gender.product_gender == selected_gender %}selected{% endif %}>
+                        {{ gender.product_gender }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="product_brand">Brand:</label>
+            <select name="product_brand" id="product_brand">
+                <option value="">All</option>
+                {% for brand in product_brands %}
+                    <option value="{{ brand.product_brand }}" {% if brand.product_brand == selected_brand %}selected{% endif %}>
+                        {{ brand.product_brand }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="product_size">Size:</label>
+            <select name="product_size" id="product_size">
+                <option value="">All</option>
+                {% for size in product_sizes %}
+                    <option value="{{ size.product_size }}" {% if size.product_size == selected_size %}selected{% endif %}>
+                        {{ size.product_size }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="seller">Seller:</label>
+            <select name="seller" id="seller">
+                <option value="">All</option>
+                {% for seller in sellers %}
+                    <option value="{{ seller.business_name }}" {% if seller.business_name == selected_seller %}selected{% endif %}>
+                        {{ seller.business_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="price_min">Price Min:</label>
+            <input type="number" name="price_min" id="price_min" value="{{ selected_price_min }}">
+        </div>
+        <div>
+            <label for="price_max">Price Max:</label>
+            <input type="number" name="price_max" id="price_max" value="{{ selected_price_max }}">
+        </div>
+        <div>
+            <label for="order_by">Order By:</label>
+            <select name="order_by" id="order_by">
+                <option value="p.product_name" {% if selected_order == 'p.product_name' %}selected{% endif %}>Name</option>
+                <option value="p.product_price" {% if selected_order == 'p.product_price' %}selected{% endif %}>Price</option>
+                <option value="p.product_stock" {% if selected_order == 'p.product_stock' %}selected{% endif %}>Stock</option>
+                <option value="p.creation_date" {% if selected_order == 'p.creation_date' %}selected{% endif %}>Creation Date</option>
+            </select>
+        </div>
+        <div>
+            <label for="order_direction">Sort Direction:</label>
+            <select name="order_direction" id="order_direction">
+                <option value="ASC" {% if selected_direction == 'ASC' %}selected{% endif %}>Ascending</option>
+                <option value="DESC" {% if selected_direction == 'DESC' %}selected{% endif %}>Descending</option>
+            </select>
+        </div>
+        <button type="submit">Filter</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Gender</th>
+                <th>Brand</th>
+                <th>Size</th>
+                <th>Seller</th>
+                <th>Favorites</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            {% if not product.is_deleted %}
+            <tr>
+                <td>
+                    {% if product.image_data %}
+                    <img src="{{ url_for('product.serve_image', product_id=product.product_id) }}" alt="Product Image" width="50" height="50">
+                    {% else %}
+                    No image
+                    {% endif %}
+                </td>
+                <td><a href="{{ url_for('product.view_product', product_id=product.product_id) }}">{{ product.product_name }}</a></td>
+                <td>{{ product.product_price }}</td>
+                <td>{{ product.product_stock }}</td>
+                <td>{{ product.product_type }}</td>
+                <td>{{ product.product_description }}</td>
+                <td>{{ product.product_gender }}</td>
+                <td>{{ product.product_brand }}</td>
+                <td>{{ product.product_size }}</td>
+                <td>{{ product.business_name }}</td>
+                <td>
+                    {% if session['role'] == 'buyer' %}
+                        {% if product.is_favorite %}
+                            <form method="post" action="{{ url_for('product.remove_from_favorites', product_id=product.product_id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-link p-0" style="color: gold;">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('product.add_to_favorites', product_id=product.product_id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-link p-0" style="color: grey;">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</body>
+</html>

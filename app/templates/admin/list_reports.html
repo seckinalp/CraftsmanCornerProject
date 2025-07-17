@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Reports</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #E91E63;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: white;
+        }
+        .sidebar {
+            background-color: transparent;
+            padding-top: 20px;
+            position: fixed;
+            top: 56px; /* Height of navbar */
+            bottom: 0;
+            width: 250px;
+            overflow-y: auto;
+        }
+        .sidebar a {
+            color: black;
+            padding: 15px;
+            text-decoration: none;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #f6e5ea;
+        }
+        .logo {
+            width: 150px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            margin-top: 56px; /* Height of navbar */
+        }
+        .container {
+            max-width: 100%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #E91E63;
+        }
+        .btn-primary {
+            background-color: #E91E63;
+            border: none;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background-color: #C2185B;
+        }
+        .btn-warning {
+            background-color: #FFC107;
+            border: none;
+            width: 100%;
+        }
+        .btn-warning:hover {
+            background-color: #FFA000;
+        }
+        .btn-danger {
+            background-color: #F44336;
+            border: none;
+            width: 100%;
+        }
+        .btn-danger:hover {
+            background-color: #D32F2F;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #E91E63;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .divider {
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: #ddd;
+        }
+        .divider::before {
+            left: 0;
+        }
+        .divider::after {
+            right: 0;
+        }
+        .divider span {
+            background-color: white;
+            padding: 0 10px;
+            color: #888;
+        }
+        @media (max-width: 767.98px) {
+            .form-row .form-group {
+                margin-bottom: 15px;
+            }
+            .btn {
+                margin-top: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">{% if session.get('role') != 'admin' %}Reports{% else %}Admin Dashboard{% endif %}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {% if session.get('role') == 'admin' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.profile') }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.logout_admin') }}">Logout</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            {% if session.get('role') == 'admin' %}
+            <nav class="col-md-3 col-lg-2 sidebar">
+                <img src="{{ url_for('static', filename='logo3.png') }}" alt="Craftsman Corner Logo" class="logo">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.admin_dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.user_reports') }}">User Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.product_reports') }}">Product Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.create_system_report') }}">Create System Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.report') }}">System Reports</a>
+                    </li>
+                </ul>
+            </nav>
+            {% endif %}
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 content {% if session.get('role') != 'admin' %}offset-md-0 mx-auto col-md-6{% endif %}">
+                <div class="container">
+                    <div class="header">
+                        <h2>System Reports</h2>
+                    </div>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div class="flash-messages">
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Report Name</th>
+                                <th>Report Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in reports %}
+                            <tr>
+                                <td>{{ report.report_name }}</td>
+                                <td>{{ report.report_date }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin_bp.view_report', report_id=report.system_report_id) }}" class="btn btn-primary" {% if session.get('role') != 'admin' %}target="_blank"{% endif %}>View Report</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

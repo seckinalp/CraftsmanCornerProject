@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Orders</title>
+    <!-- Bootstrap CSS -->
+    <style>
+        .container {
+            max-width: 1200px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+        .filters {
+            margin-bottom: 20px;
+        }
+        .filter-btn {
+            background-color: #E91E63;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .filter-btn:hover {
+            background-color: #C2185B;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table th, .table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .table th {
+            background-color: #f2f2f2;
+        }
+        .table tr:hover {
+            background-color: #f1f1f1;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #E91E63;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    </style>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    {% include "seller_navbar.html" %}
+    <div class="container">
+        <h1 class="text-center my-4">Orders for Your Products</h1>
+        <div class="filters text-center mb-4">
+            <button class="filter-btn btn btn-primary mx-2" data-status="ALL">All</button>
+            <button class="filter-btn btn btn-primary mx-2" data-status="ORDERED">Ordered</button>
+            <button class="filter-btn btn btn-primary mx-2" data-status="SHIPPED">Shipped</button>
+            <button class="filter-btn btn btn-primary mx-2" data-status="FINALIZED">Finalized</button>
+            <button class="filter-btn btn btn-primary mx-2" data-status="RETURNED">Returned</button>
+            <button class="filter-btn btn btn-primary mx-2" data-status="RETURN_FINALIZED">Return Finalized</button>
+            <button class="filter-btn btn btn-primary mx-2" data-status="REJECTED">Rejected</button>
+            <button class="filter-btn btn btn-primary mx-2" data-status="CANCELLED">Cancelled</button>
+            <button class="filter-btn btn btn-primary mx-2" data-status="RETURN_REJECTED">Return Rejected</button>
+        </div>
+
+        {% if orders %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total Price</th>
+                            <th>Order Date</th>
+                            <th>Order Status</th>
+                            <th>Buyer Username</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr class="order-row" data-status="{{ order.order_status }}">
+                                <td>{{ order.order_id }}</td>
+                                <td>{{ order.product_name }}</td>
+                                <td>{{ order.order_amount }}</td>
+                                <td>${{ order.product_price }}</td>
+                                <td>${{ order.order_amount * order.product_price }}</td>
+                                <td>{{ order.order_date }}</td>
+                                <td>{{ order.order_status }}</td>
+                                <td>{{ order.username }}</td>
+                                <td>
+                                    {% if order.order_status == 'ORDERED' %}
+                                        <form action="{{ url_for('order.ship_order', order_id=order.order_id) }}" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-success btn-sm">Ship it</button>
+                                        </form>
+                                        <form action="{{ url_for('order.reject_order', order_id=order.order_id) }}" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger btn-sm">Reject order</button>
+                                        </form>
+                                    {% elif order.order_status == 'RETURNED' %}
+                                        <form action="{{ url_for('order.return_finalize_order', order_id=order.order_id) }}" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-success btn-sm">Finalize Return</button>
+                                        </form>
+                                        <form action="{{ url_for('order.return_reject_order', order_id=order.order_id) }}" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger btn-sm">Reject Return</button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No orders found.</p>
+        {% endif %}
+        <div class="text-center mt-4">
+            <a href="{{ url_for('seller_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+        </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const orderRows = document.querySelectorAll('.order-row');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const status = this.dataset.status;
+                    orderRows.forEach(row => {
+                        if (status === 'ALL' || row.dataset.status === status) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    console.log(`Form submitted: ${this.action}`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+        .btn-primary {
+            background-color: #E91E63;
+            border: none;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background-color: #C2185B;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .back-btn {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    {% if session['role'] == 'seller' %}
+    {% include "seller_navbar.html" %}
+    {% else %}
+    {% include 'buyer_navbar.html' %}
+    {% endif %}
+</div>
+    <div class="container">
+        <div class="header">
+            <h2>Report</h2>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="alert alert-success">
+              {% for category, message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        {% if session['role'] == 'seller' %}
+            <a href="{{ url_for('seller_dashboard') }}" class="btn btn-secondary back-btn">Back to Dashboard</a>
+        {% else %}
+            <a href="{{ url_for('buyer_dashboard') }}" class="btn btn-secondary back-btn">Back to Dashboard</a>
+        {% endif %}
+        <form method="POST">
+            <div class="form-group">
+                <label for="report_type">Report Type</label>
+                <select class="form-control" id="report_type" name="report_type" required>
+                    <option value="general">General</option>
+                    <option value="user">User</option>
+                    <option value="product">Product</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+            </div>
+            <div class="form-group" id="user_report" style="display: none;">
+                <label for="reported_user_id">Reported User</label>
+                <select class="form-control" id="reported_user_id" name="reported_user_id">
+                    {% for user in users %}
+                        <option value="{{ user.user_id }}">{{ user.username }} (ID: {{ user.user_id }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group" id="product_report" style="display: none;">
+                <label for="reported_product_id">Reported Product</label>
+                <select class="form-control" id="reported_product_id" name="reported_product_id">
+                    {% for product in products %}
+                        <option value="{{ product.product_id }}">{{ product.product_name }} (ID: {{ product.product_id }})</option>
+                    {% endfor %}
+                </select>
+                <label for="report_reason">Reason</label>
+                <select class="form-control" id="report_reason" name="report_reason">
+                    <option value="inappropriate">Inappropriate</option>
+                    <option value="false_information">False Information</option>
+                    <option value="spam">Spam</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Report</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('report_type').addEventListener('change', function () {
+            var userReport = document.getElementById('user_report');
+            var productReport = document.getElementById('product_report');
+            userReport.style.display = 'none';
+            productReport.style.display = 'none';
+            if (this.value === 'user') {
+                userReport.style.display = 'block';
+            } else if (this.value === 'product') {
+                productReport.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

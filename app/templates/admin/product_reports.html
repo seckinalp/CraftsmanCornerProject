@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Reports</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #E91E63;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: white;
+        }
+        .sidebar {
+            background-color: transparent;
+            padding-top: 20px;
+            position: fixed;
+            top: 56px; /* Height of navbar */
+            bottom: 0;
+            width: 250px;
+            overflow-y: auto;
+        }
+        .sidebar a {
+            color: black;
+            padding: 15px;
+            text-decoration: none;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #f6e5ea;
+        }
+        .logo {
+            width: 150px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            margin-top: 56px; /* Height of navbar */
+        }
+        .container {
+            max-width: 100%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #E91E63;
+        }
+        .btn-theme {
+            background-color: #E91E63;
+            border: none;
+            color: white;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        .btn-theme:hover {
+            background-color: #C2185B;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #E91E63;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .divider {
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: #ddd;
+        }
+        .divider::before {
+            left: 0;
+        }
+        .divider::after {
+            right: 0;
+        }
+        .divider span {
+            background-color: white;
+            padding: 0 10px;
+            color: #888;
+        }
+        @media (max-width: 767.98px) {
+            .form-row .form-group {
+                margin-bottom: 15px;
+            }
+            .btn {
+                margin-top: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_bp.profile') }}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_bp.logout_admin') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 sidebar">
+                <img src="{{ url_for('static', filename='logo3.png') }}" alt="Craftsman Corner Logo" class="logo">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.admin_dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.user_reports') }}">User Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('admin_bp.product_reports') }}">Product Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.create_system_report') }}">Create System Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.list_reports') }}">System Reports</a>
+                    </li>
+                </ul>
+            </nav>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 content">
+                <div class="container">
+                    <div class="header">
+                        <h2>Product Reports</h2>
+                    </div>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        <div class="alert alert-dismissible fade show" role="alert">
+                          {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} mt-2">
+                              {{ message }}
+                            </div>
+                          {% endfor %}
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                      {% endif %}
+                    {% endwith %}
+                    <form method="post" action="{{ url_for('admin_bp.product_reports') }}">
+                        <div class="form-row">
+                            <div class="form-group col-12 col-md-3">
+                                <label for="reporterFilter">Reporter:</label>
+                                <select class="form-control" id="reporterFilter" name="reporterFilter">
+                                    <option value="">All Reporters</option>
+                                    {% for reporter in reporters %}
+                                        <option value="{{ reporter.username }}" {% if reporter.username == reporterFilter %}selected{% endif %}>{{ reporter.username }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-12 col-md-3">
+                                <label for="productIdFilter">Product ID:</label>
+                                <select class="form-control" id="productIdFilter" name="productIdFilter">
+                                    <option value="">All Products</option>
+                                    {% for product in products %}
+                                        <option value="{{ product.product_id }}" {% if product.product_id == productIdFilter %}selected{% endif %}>{{ product.product_name }} (ID: {{ product.product_id }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-12 col-md-3">
+                                <label for="reasonFilter">Reason:</label>
+                                <select class="form-control" id="reasonFilter" name="reasonFilter">
+                                    <option value="">All Reasons</option>
+                                    <option value="inappropriate" {% if reasonFilter == 'inappropriate' %}selected{% endif %}>Inappropriate</option>
+                                    <option value="false_information" {% if reasonFilter == 'false_information' %}selected{% endif %}>False Information</option>
+                                    <option value="spam" {% if reasonFilter == 'spam' %}selected{% endif %}>Spam</option>
+                                    <option value="other" {% if reasonFilter == 'other' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-12 col-md-3">
+                                <label for="limitValue">Limit:</label>
+                                <input type="number" class="form-control" id="limitValue" name="limitValue" value="{{ limitValue }}">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-theme mb-3">Filter</button>
+                    </form>
+                    <br>
+                    <table class="table table-bordered table-responsive-md">
+                        <thead>
+                            <tr>
+                                <th>Reported Product ID</th>
+                                <th>Reporter</th>
+                                <th>Product</th>
+                                <th>Reason</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in reports %}
+                            <tr>
+                                <td>{{ report.reported_product_id }}</td>
+                                <td>{{ report.reporter_username }}</td>
+                                <td><a href="{{ url_for('product.view_product', product_id=report.reported_product_id) }}" target="_blank">{{ report.product_name }}</a></td>
+                                <td>{{ report.report_reason }}</td>
+                                <td>{{ report.description }}</td>
+                                <td>
+                                    <form method="post" action="{{ url_for('admin_bp.handle_product_report') }}">
+                                        <input type="hidden" name="report_id" value="{{ report.report_id }}">
+                                        <input type="hidden" name="product_id" value="{{ report.reported_product_id }}">
+                                        <button type="submit" name="action" value="delete_product" class="btn btn-theme mb-1">Delete Product</button>
+                                        <button type="submit" name="action" value="warn" class="btn btn-theme mb-1">Give Warning</button>
+                                        <button type="submit" name="action" value="delete_report" class="btn btn-theme">Delete Report</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

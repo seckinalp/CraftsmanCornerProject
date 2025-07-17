@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create System Report</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #E91E63;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: white;
+        }
+        .sidebar {
+            background-color: transparent;
+            padding-top: 20px;
+            position: fixed;
+            top: 56px; /* Height of navbar */
+            bottom: 0;
+            width: 250px;
+            overflow-y: auto;
+        }
+        .sidebar a {
+            color: black;
+            padding: 15px;
+            text-decoration: none;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #f6e5ea;
+        }
+        .logo {
+            width: 150px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            margin-top: 56px; /* Height of navbar */
+        }
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #E91E63;
+        }
+        .btn-primary {
+            background-color: #E91E63;
+            border: none;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background-color: #C2185B;
+        }
+        .message {
+            margin-bottom: 20px;
+            color: green;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_bp.profile') }}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_bp.logout_admin') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 sidebar">
+                <img src="{{ url_for('static', filename='logo3.png') }}" alt="Craftsman Corner Logo" class="logo">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('admin_bp.admin_dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.user_reports') }}">User Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.product_reports') }}">Product Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.create_system_report') }}">Create System Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.list_reports') }}">System Reports</a>
+                    </li>
+                </ul>
+            </nav>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 content">
+                <div class="container">
+                    <h2>Create System Report</h2>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div class="flash-messages">
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <form method="POST" action="{{ url_for('admin_bp.create_system_report') }}">
+                        <div class="form-group">
+                            <label for="reportType">Report Type:</label>
+                            <select id="reportType" name="reportType" class="form-control" required>
+                                <option value="popular_categories">Most Popular Categories (By sold quantity)</option>
+                                <option value="most_popular_products">Most Popular Products (By sold quantity)</option>
+                                <option value="top_customers">Top Customers (Most Spend)</option>
+                                <option value="products_with_highest_lowest_orders">Products with highest and lowest order</option>
+                                <option value="most_exp_most_chp_product">Most Cheap Most Expensive Product</option>
+                                <option value="popular_products_by_review">Popular Products by Review</option>
+                                <option value="popular_products_by_favorited">Popular Products by Favorited</option>
+                                <option value="top_customers_by_orders">Top Customers by Orders</option>
+                                <option value="top_customers_by_reviews">Top Customers by Reviews</option>
+                                <option value="sales_over_time_by_revenue">Sales Over Time by Revenue</option>
+                                <option value="sales_over_time_by_amount">Sales Over Time by Amount</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" id="startDate" name="startDate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" id="endDate" name="endDate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="minPrice">Minimum Price:</label>
+                            <input type="number" step="0.01" id="minPrice" name="minPrice" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="maxPrice">Maximum Price:</label>
+                            <input type="number" step="0.01" id="maxPrice" name="maxPrice" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="productType">Product Type:</label>
+                            <select id="productType" name="productType" class="form-control">
+                                <option value="all">All Categories</option>
+                                {% for type in product_types %}
+                                    <option value="{{ type.product_type }}">{{ type.product_type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportingUserName">Reporting User Name:</label>
+                            <select id="reportingUserName" name="reportingUserName" class="form-control" required>
+                                <option value="all">All Sellers</option>
+                                {% for seller in sellers %}
+                                    <option value="{{ seller.username }}">{{ seller.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="limitNumbers">Limit:</label>
+                            <input type="number" id="limitNumbers" name="limitNumbers" class="form-control" max="20">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Report</button>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

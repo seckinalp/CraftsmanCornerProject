@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 1200px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 20px auto;
+        }
+        .navbar-nav .nav-link {
+            color: #E91E63 !important;
+            display: flex;
+            align-items: center;
+        }
+        .navbar-nav .nav-link i {
+            margin-right: 8px;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #C2185B !important;
+        }
+        .logo {
+            width: 100px;
+            margin-right: 15px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .seller-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .seller-info img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        .seller-info h2 {
+            display: flex;
+            align-items: center;
+        }
+        .verified-icon {
+            color: #4caf50;
+            margin-left: 10px;
+        }
+        .star-rating {
+            color: #FFD700;
+        }
+        .product-list {
+            margin-top: 30px;
+        }
+        .product-card {
+            margin-bottom: 20px;
+        }
+        .card-img-top {
+            max-height: 200px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    {% include 'seller_navbar.html' %}
+
+    <div class="container">
+        <div class="header">
+            <h2>Welcome to {{ seller.business_name }}'s Shop</h2>
+        </div>
+        <div class="seller-info">
+            <h2>
+                {{ seller.name }} {{ seller.surname }}
+                {% if seller.is_verified %}
+                    <i class="fas fa-check-circle verified-icon"></i>
+                {% endif %}
+            </h2>
+            <p><strong>Business Address:</strong> {{ seller.business_address }}</p>
+            <p><strong>Bio:</strong> {{ seller.bio }}</p>
+            <p>
+                <strong>Average Rating:</strong>
+                <span class="star-rating">
+                    {% for i in range(5) %}
+                        {% if i < seller.average_rating|round %}
+                            <i class="fas fa-star"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+                ({{ seller.total_reviews }} reviews)
+            </p>
+        </div>
+        <div class="product-list">
+            <h3>Listed Products</h3>
+            <div class="row">
+                {% for product in products %}
+                    {% if not product.is_deleted %}
+                    <div class="col-md-4">
+                        <div class="card product-card">
+                            <img src="{{ url_for('product.serve_image', product_id=product.product_id) }}" class="card-img-top" alt="Product Image">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.product_name }}</h5>
+                                <p class="card-text">Price: ${{ product.product_price }}</p>
+                                <p class="card-text">Brand: {{ product.product_brand }}</p>
+                                <p class="card-text">Size: {{ product.product_size }}</p>
+                                <p class="card-text">Stock: {{ product.product_stock }}</p>
+                                <p class="card-text">
+                                    Rating:
+                                    <span class="star-rating">
+                                        {% for i in range(5) %}
+                                            {% if i < product.average_rating|round %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    ({{ product.total_reviews }} reviews)
+                                </p>
+                                <a href="{{ url_for('product.view_product', product_id=product.product_id) }}" class="btn btn-primary">View Product</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

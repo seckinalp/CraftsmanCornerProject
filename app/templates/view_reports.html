@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reports</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+        }
+        .btn-primary {
+            background-color: #E91E63;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #C2185B;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .back-btn {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    {% if session['role'] == 'seller' %}
+    {% include "seller_navbar.html" %}
+    {% else %}
+    {% include 'buyer_navbar.html' %}
+    {% endif %}
+    <div class="container">
+        <div class="header">
+            <h2>My Reports</h2>
+        </div>
+        <div class="list-group">
+            {% for report in reports %}
+                <div class="list-group-item">
+                    <h5 class="mb-1">{{ report.description }}</h5>
+                    <small>Reported on: {{ report.report_date }}</small>
+                    <p class="mb-1">Type: {{ 'User' if report.reported_user_id else 'Product' if report.reported_product_id else 'General' }}</p>
+                    {% if report.reported_user_id %}
+                        <p class="mb-1">Reported User ID: {{ report.reported_user_id }}</p>
+                    {% elif report.reported_product_id %}
+                        <p class="mb-1">Reported Product ID: {{ report.reported_product_id }}</p>
+                        <p class="mb-1">Reason: {{ report.report_reason }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+        {% if session['role'] == 'seller' %}
+            <a href="{{ url_for('seller_dashboard') }}" class="btn btn-secondary back-btn">Back to Dashboard</a>
+        {% else %}
+            <a href="{{ url_for('buyer_dashboard') }}" class="btn btn-secondary back-btn">Back to Dashboard</a>
+        {% endif %}
+    </div>
+</body>
+</html>

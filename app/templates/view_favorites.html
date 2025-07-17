@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Products</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 1200px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            overflow: auto;
+        }
+        .product-item {
+            margin-bottom: 20px;
+        }
+        .product-item img {
+            max-width: 100px;
+            margin-right: 20px;
+        }
+        .product-item .details {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    {% include 'buyer_navbar.html' %}
+    <div class="container">
+        <h1>Your Favorite Products</h1>
+        {% if products %}
+            <ul class="list-group">
+                {% for product in products %}
+                <li class="list-group-item product-item">
+                    <div class="d-flex">
+                        {% if product.image_data %}
+                        <img src="{{ url_for('product.serve_image', product_id=product.product_id) }}" alt="Product Image">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='no_image.png') }}" alt="No Image">
+                        {% endif %}
+                        <div class="details">
+                            <h5>
+                                <a href="{{ url_for('product.view_product', product_id=product.product_id) }}">{{ product.product_name }}</a>
+                                <form method="post" action="{{ url_for('product.remove_from_favorites', product_id=product.product_id) }}" style="display: inline;">
+                                    <button type="submit" class="btn btn-link p-0" style="color: gold;">
+                                        <i class="fas fa-star"></i>
+                                    </button>
+                                </form>
+                            </h5>
+                            <p><strong>Price:</strong> ${{ product.product_price }}</p>
+                            <p><strong>Seller:</strong> {{ product.business_name }}</p>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have no favorite products.</p>
+        {% endif %}
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

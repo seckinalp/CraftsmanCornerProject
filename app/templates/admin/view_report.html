@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Report</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            padding-top: 56px; /* Add padding to the top to avoid overlap with navbar */
+        }
+        .navbar {
+            background-color: #E91E63;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: white;
+        }
+        .content {
+            padding: 20px;
+        }
+        .container {
+            max-width: 100%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px; /* Add margin to the top to create space between container and content */
+        }
+        .btn-primary {
+            background-color: #E91E63;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #C2185B;
+        }
+        .logo {
+            width: 150px;
+            margin-right: 10px;
+        }
+        .report-section {
+            margin-bottom: 20px;
+        }
+        .report-section h3 {
+            color: #E91E63;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">
+            <img src="{{ url_for('static', filename='logo3.png') }}" alt="Craftsman Corner Logo" class="logo">
+            {{ report.report_name }}
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <!-- Add any additional navbar items here -->
+            </ul>
+        </div>
+    </nav>
+    <div class="container content">
+        <h2>{{ report.report_name }}</h2>
+        <p><strong>Report Date:</strong> {{ report.report_date }}</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="report-section">
+            <h3>Report Details</h3>
+            <div>
+                <p>{{ report.report_details }}</p>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h3>Report File Content</h3>
+            <div>
+                {% if report.report_file %}
+                    {% if report.report_name == 'Warning Report' %}
+                        {% set detail = report.report_file %}
+                        <p><strong>Action:</strong> {{ detail['action'] }}</p>
+                        {% if detail['product_id'] %}
+                            <p><strong>Product ID:</strong> <a href="{{ url_for('product.view_product', product_id=detail['product_id']) }}" target="_blank">{{ detail['product_id'] }}</a></p>
+                        {% endif %}
+                        <p><strong>User ID:</strong> {{ detail['user_id'] }}</p>
+                        <p><strong>Username:</strong> {{ detail['username'] }}</p>
+                        <p><strong>Description:</strong> {{ detail['description'] }}</p>
+                        <hr>
+                    {% elif report.report_name == 'products_with_highest_lowest_orders' %}
+                        <p><strong>Highest Ordered Product:</strong> {{ report.report_file['highest_ordered_product']['product_name'] }}</p>
+                        <p><strong>Total Orders for Highest Ordered Product:</strong> {{ report.report_file['highest_ordered_product']['total_orders'] }}</p>
+                        <p><strong>Lowest Ordered Product:</strong> {{ report.report_file['lowest_ordered_product']['product_name'] }}</p>
+                        <p><strong>Total Orders for Lowest Ordered Product:</strong> {{ report.report_file['lowest_ordered_product']['total_orders'] }}</p>
+                    {% else %}
+                        {% for detail in report.report_file %}
+                            {% if report.report_name == 'popular_categories' %}
+                                <p><strong>Product Type:</strong> {{ detail['product_type'] }}</p>
+                                <p><strong>Total Revenue:</strong> {{ detail['total_revenue'] }}</p>
+                            {% elif report.report_name == 'most_popular_products' %}
+                                <p><strong>Product Name:</strong> {{ detail['product_name'] }}</p>
+                                <p><strong>Sales Count:</strong> {{ detail['sales_count'] }}</p>
+                            {% elif report.report_name == 'top_customers' %}
+                                <p><strong>Username:</strong> {{ detail['username'] }}</p>
+                                <p><strong>Total Spent:</strong> {{ detail['total_spent'] }}</p>
+                            {% elif report.report_name == 'sales_over_time' %}
+                                <p><strong>Date:</strong> {{ detail['date'] }}</p>
+                                <p><strong>Total Sales:</strong> {{ detail['total_sales'] }}</p>
+                            {% elif report.report_name == 'popular_products_by_review' %}
+                                <p><strong>Product Name:</strong> {{ detail['product_name'] }}</p>
+                                <p><strong>Review Count:</strong> {{ detail['review_count'] }}</p>
+                            {% elif report.report_name == 'popular_products_by_favorited' %}
+                                <p><strong>Product Name:</strong> {{ detail['product_name'] }}</p>
+                                <p><strong>Favorites Count:</strong> {{ detail['favorites_count'] }}</p>
+                            {% elif report.report_name == 'top_customers_by_orders' %}
+                                <p><strong>Username:</strong> {{ detail['username'] }}</p>
+                                <p><strong>Orders Count:</strong> {{ detail['orders_count'] }}</p>
+                            {% elif report.report_name == 'top_customers_by_reviews' %}
+                                <p><strong>Username:</strong> {{ detail['username'] }}</p>
+                                <p><strong>Reviews Count:</strong> {{ detail['reviews_count'] }}</p>
+                            {% elif report.report_name == 'sales_over_time_by_revenue' %}
+                                <p><strong>Date:</strong> {{ detail['date'] }}</p>
+                                <p><strong>Total Revenue:</strong> {{ detail['total_revenue'] }}</p>
+                            {% elif report.report_name == 'sales_over_time_by_amount' %}
+                                <p><strong>Date:</strong> {{ detail['date'] }}</p>
+                                <p><strong>Total Sales:</strong> {{ detail['total_sales'] }}</p>
+                            {% elif report.report_name == 'most_exp_most_chp_product' %}
+                                <p><strong>Max Price:</strong> {{ detail['max_price'] }}</p>
+                                <p><strong>Min Price:</strong> {{ detail['min_price'] }}</p>
+                            {% elif report.report_name == 'products_with_max_min_reviews' %}
+                                <p><strong>Product with Max Reviews:</strong> {{ detail['max_reviewed_product'] }} (ID: {{ detail['max_reviewed_product_id'] }})</p>
+                                <p><strong>Max Reviews Count:</strong> {{ detail['max_reviews'] }}</p>
+                                <p><strong>Product with Min Reviews:</strong> {{ detail['min_reviewed_product'] }} (ID: {{ detail['min_reviewed_product_id'] }})</p>
+                                <p><strong>Min Reviews Count:</strong> {{ detail['min_reviews'] }}</p>
+                            {% endif %}
+                            <hr>
+                        {% endfor %}
+                    {% endif %}
+                {% else %}
+                    <p>No report details available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

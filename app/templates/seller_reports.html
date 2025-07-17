@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Reports</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 1200px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+        .report-section {
+            margin-bottom: 20px;
+        }
+        .report-section h3 {
+            color: #E91E63;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">Your Reports</h1>
+
+        {% if reports %}
+            <div class="list-group">
+                {% for report in reports %}
+                    <a href="{{ url_for('profile.view_report', report_id=report.system_report_id) }}" class="list-group-item list-group-item-action">
+                        <h5 class="mb-1">{{ report.report_name }}</h5>
+                        <p class="mb-1">{{ report.report_date }}</p>
+                        <small>{{ report.report_details }}</small>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No reports found.</p>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('seller_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

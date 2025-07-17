@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Seller Profile</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Basic reset */
+
+
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        form {
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-control:focus {
+            border-color: #E91E63;
+            box-shadow: none;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            display: inline-block;
+            margin: 10px 5px;
+            padding: 10px 20px;
+            background-color: #E91E63;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button:hover {
+            background-color: #C2185B;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .col-md-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+            padding: 0 15px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'seller_navbar.html' %}
+    <h1>Edit Seller Profile</h1>
+    <form method="POST" action="{{ url_for('profile.edit_seller_profile') }}">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" value="{{ seller.name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="surname">Surname:</label>
+                    <input type="text" id="surname" name="surname" class="form-control" value="{{ seller.surname }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" value="{{ seller.email }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact_info_address">Address:</label>
+                    <input type="text" id="contact_info_address" name="contact_info_address" class="form-control" value="{{ seller.contact_info_address }}">
+                </div>
+                <div class="form-group">
+                    <label for="contact_info_phone_no">Phone Number:</label>
+                    <input type="text" id="contact_info_phone_no" name="contact_info_phone_no" class="form-control" value="{{ seller.contact_info_phone_no }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="tax_number">Tax Number:</label>
+                    <input type="text" id="tax_number" name="tax_number" class="form-control" value="{{ seller.tax_number }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="business_address">Business Address:</label>
+                    <input type="text" id="business_address" name="business_address" class="form-control" value="{{ seller.business_address }}">
+                </div>
+                <div class="form-group">
+                    <label for="business_name">Business Name:</label>
+                    <input type="text" id="business_name" name="business_name" class="form-control" value="{{ seller.business_name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="bio">Bio:</label>
+                    <textarea id="bio" name="bio" class="form-control">{{ seller.bio }}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="button-group">
+            <a href="{{ url_for('profile.seller_profile') }}">Cancel</a>
+            <button type="submit">Save Changes</button>
+        </div>
+    </form>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

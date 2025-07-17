@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You are banned</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            margin: 0;
+        }
+        .top-bar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px;
+            background: transparent;
+        }
+        .logo {
+            width: 150px;
+            margin: auto; /* Center the logo */
+            margin-right: 680px;
+        }
+        .btn {
+            background-color: #E91E63;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+        }
+        .btn:hover {
+            background-color: #C2185B;
+        }
+        .content {
+            margin-top: 150px; /* Ensure content is not hidden behind the top bar */
+        }
+        .message {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        img {
+            width: 480px;
+            height: auto;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="{{ url_for('login') }}" class="btn btn-primary">Back to Login</a>
+        <img src="{{ url_for('static', filename='logo3.png') }}" alt="Craftsman Corner Logo" class="logo">
+    </div>
+    <div class="content">
+        <img src="{{ url_for('static', filename='ban.png') }}" alt="You are banned">
+        <div class="message">You are banned</div>
+    </div>
+</body>
+</html>

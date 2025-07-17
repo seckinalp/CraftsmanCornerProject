@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Admin Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #E91E63;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: white;
+        }
+        .sidebar {
+            background-color: transparent;
+            padding-top: 20px;
+            position: fixed;
+            top: 56px; /* Height of navbar */
+            bottom: 0;
+            width: 250px;
+            overflow-y: auto;
+        }
+        .sidebar a {
+            color: black;
+            padding: 15px;
+            text-decoration: none;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #f6e5ea;
+        }
+        .logo {
+            width: 150px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            margin-top: 56px; /* Height of navbar */
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px; /* Fixed height for both charts */
+        }
+        .btn-custom {
+            background-color: #ff6f61;
+            border-color: #ff6f61;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #ff5a4d;
+            border-color: #ff5a4d;
+        }
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .filter-row .form-group {
+            flex: 1 1 calc(50% - 10px);
+            margin: 5px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_bp.profile') }}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_bp.logout_admin') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 sidebar">
+                <img src="{{ url_for('static', filename='logo3.png') }}" alt="Craftsman Corner Logo" class="logo">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('admin_bp.admin_dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.user_reports') }}">User Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.product_reports') }}">Product Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.create_system_report') }}">Create System Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_bp.list_reports') }}">System Reports</a>
+                    </li>
+                </ul>
+            </nav>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 content">
+                <h2>Dashboard</h2>
+
+                <div class="row">
+                    <!-- Sales Analysis Filters -->
+                    <div class="col-md-6">
+                        <form method="POST" action="{{ url_for('admin_bp.admin_dashboard') }}">
+                            <div class="form-group">
+                                <label for="yearSelect">Select Year:</label>
+                                <select class="form-control" id="yearSelect" name="selectedYear">
+                                    <option value="2022" {% if selected_year == '2022' %}selected{% endif %}>2022</option>
+                                    <option value="2023" {% if selected_year == '2023' %}selected{% endif %}>2023</option>
+                                    <option value="2024" {% if selected_year == '2024' %}selected{% endif %}>2024</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="monthSelect">Select Month:</label>
+                                <select class="form-control" id="monthSelect" name="selectedMonth">
+                                    <option value="" {% if not selected_month %}selected{% endif %}>All Months</option>
+                                    <option value="01" {% if selected_month == '01' %}selected{% endif %}>January</option>
+                                    <option value="02" {% if selected_month == '02' %}selected{% endif %}>February</option>
+                                    <option value="03" {% if selected_month == '03' %}selected{% endif %}>March</option>
+                                    <option value="04" {% if selected_month == '04' %}selected{% endif %}>April</option>
+                                    <option value="05" {% if selected_month == '05' %}selected{% endif %}>May</option>
+                                    <option value="06" {% if selected_month == '06' %}selected{% endif %}>June</option>
+                                    <option value="07" {% if selected_month == '07' %}selected{% endif %}>July</option>
+                                    <option value="08" {% if selected_month == '08' %}selected{% endif %}>August</option>
+                                    <option value="09" {% if selected_month == '09' %}selected{% endif %}>September</option>
+                                    <option value="10" {% if selected_month == '10' %}selected{% endif %}>October</option>
+                                    <option value="11" {% if selected_month == '11' %}selected{% endif %}>November</option>
+                                    <option value="12" {% if selected_month == '12' %}selected{% endif %}>December</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-custom w-100 mt-2">Apply Year/Month Filter</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Top Products Filters -->
+                        <form method="POST" action="{{ url_for('admin_bp.admin_dashboard') }}">
+                            <div class="filter-row">
+                                <div class="form-group">
+                                    <label for="limitValue">Number of Top Products:</label>
+                                    <input type="number" class="form-control" id="limitValue" name="limitValue" value="{{ limit_value }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productFilter">Select Filter:</label>
+                                    <select class="form-control" id="productFilter" name="productFilter">
+                                        <option value="most_sold_general" {% if product_filter == 'most_sold_general' %}selected{% endif %}>Most Sold (General)</option>
+                                        <option value="most_sold_category" {% if product_filter == 'most_sold_category' %}selected{% endif %}>Most Sold (By Category)</option>
+                                        <option value="most_faved_general" {% if product_filter == 'most_faved_general' %}selected{% endif %}>Most Faved (General)</option>
+                                        <option value="most_faved_category" {% if product_filter == 'most_faved_category' %}selected{% endif %}>Most Faved (By Category)</option>
+                                        <option value="most_reviewed_general" {% if product_filter == 'most_reviewed_general' %}selected{% endif %}>Most Reviewed (General)</option>
+                                        <option value="most_reviewed_category" {% if product_filter == 'most_reviewed_category' %}selected{% endif %}>Most Reviewed (By Category)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="minValue">Min Value:</label>
+                                    <input type="number" class="form-control" id="minValue" name="minValue" value="{{ min_value }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="maxValue">Max Value:</label>
+                                    <input type="number" class="form-control" id="maxValue" name="maxValue" value="{{ max_value }}">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-custom w-100">Apply Top Products Filter</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Sales Analysis</h5>
+                                <div class="chart-container">
+                                    <canvas id="salesChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Top {{ limit_value }} Products</h5>
+                                <div class="chart-container">
+                                    <canvas id="topProductsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seller Analysis Filters -->
+                <form method="POST" action="{{ url_for('admin_bp.admin_dashboard') }}">
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="periodSelect">Select Period:</label>
+                                <select class="form-control" id="periodSelect" name="period">
+                                    <option value="">All Time</option>
+                                    <option value="1 week" {% if period == '1 week' %}selected{% endif %}>Last Week</option>
+                                    <option value="1 month" {% if period == '1 month' %}selected{% endif %}>Last Month</option>
+                                    <option value="3 months" {% if period == '3 months' %}selected{% endif %}>Last 3 Months</option>
+                                    <option value="6 months" {% if period == '6 months' %}selected{% endif %}>Last 6 Months</option>
+                                    <option value="1 year" {% if period == '1 year' %}selected{% endif %}>Last Year</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="categorySelect">Select Category:</label>
+                                <select class="form-control" id="categorySelect" name="category">
+                                    <option value="">All Categories</option>
+                                    {% for product_type in product_types %}
+                                    <option value="{{ product_type.product_type }}" {% if category == product_type.product_type %}selected{% endif %}>{{ product_type.product_type }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-custom w-100">Apply Seller Filter</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Seller with Most Quantity</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Seller</th>
+                                                <th>Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for seller in seller_most_quantity %}
+                                            <tr>
+                                                <td>{{ seller.business_name }}</td>
+                                                <td>{{ seller.total_quantity }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Seller with Most Revenue</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Seller Business Name</th>
+                                                <th>Revenue</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for seller in seller_most_revenue %}
+                                            <tr>
+                                                <td>{{ seller.business_name }}</td>
+                                                <td>{{ seller.total_revenue }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Seller with Most Products in Category</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Seller Business Name</th>
+                                                <th>Products</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for seller in seller_most_products_in_category %}
+                                            <tr>
+                                                <td>{{ seller.business_name}}</td>
+                                                <td>{{ seller.total_products }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const months = {{ months|tojson }};
+            const total_sales = {{ total_sales|tojson }};
+            const top_products = {{ top_products|tojson }};
+            const ctxSales = document.getElementById('salesChart').getContext('2d');
+            const ctxTopProducts = document.getElementById('topProductsChart').getContext('2d');
+
+            // Line Chart
+            new Chart(ctxSales, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Total Sales',
+                        data: total_sales,
+                        backgroundColor: 'rgba(233, 30, 99, 0.2)',
+                        borderColor: '#E91E63',
+                        borderWidth: 1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Pie Chart
+            const productNames = top_products.map(product => product.product_type || product.product_name);
+            const productSales = top_products.map(product => product.max_sold|| product.total_orders || product.total_sold || product.faves_count || product.reviews_count);
+            const productUrls = top_products.map(product => product.product_url);
+
+            new Chart(ctxTopProducts, {
+                type: 'pie',
+                data: {
+                    labels: productNames,
+                    datasets: [{
+                        label: 'Top Products',
+                        data: productSales,
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+                        ]
+                    }]
+                },
+                options: {
+                    onClick: function(e, item) {
+                        if (item.length) {
+                            const index = item[0].index;
+                            window.open(productUrls[index], '_blank');
+                        }
+                    }
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

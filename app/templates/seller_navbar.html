@@ -1,0 +1,125 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light w-100">
+    <a class="navbar-brand" href="{{url_for('seller_dashboard')}}"><img src="{{ url_for('static', filename='logo3.png') }}" alt="Craftsman Corner Logo" class="logo"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('seller_dashboard') }}"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('product.view_products')}}"><i class="fas fa-list"></i> Listed Items</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('product.add_product')}}"><i class="fas fa-plus"></i> Add New Item</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('order.view_orders_seller')}}"><i class="fas fa-clipboard-list"></i> Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('report.report') }}"><i class="fas fa-exclamation-triangle"></i>Report</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="{{ url_for('report.view_reports') }}"><i class="fas fa-exclamation-triangle"></i>Submitted Reports</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin_bp.list_reports') }}" target="_blank"><i class="fas fa-chart-bar"></i>My System Analysis</a>
+
+             </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <span class="nav-link"><i class="fas fa-wallet"></i> Balance: ${{ balance }}</span>
+                
+            </li>
+            <li class="nav-item">
+              
+                <a href="{{ url_for('withdraw_balance') }}" class="btn btn-danger btn-sm ml-2">-</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('profile.seller_profile')}}"><i class="fas fa-user"></i> Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+    body{
+        background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .container {
+        max-width: 1200px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        margin: 20px auto;
+    }
+    .navbar-nav .nav-link {
+        color: #E91E63 !important;
+        display: flex;
+        align-items: center;
+    }
+    .navbar-nav .nav-link i {
+        margin-right: 8px;
+    }
+    .navbar-nav .nav-link:hover {
+        color: #C2185B !important;
+    }
+    .logo {
+        width: 100px;
+        margin-right: 15px;
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    body {
+    background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.container {
+    max-width: 1200px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin: 20px auto;
+}
+.navbar-nav .nav-link {
+    color: #E91E63 !important;
+    display: flex;
+    align-items: center;
+}
+.navbar-nav .nav-link i {
+    margin-right: 8px;
+    color: #E91E63 !important; /* Set the color of all icons */
+}
+.navbar-nav .nav-link:hover {
+    color: #C2185B !important;
+}
+.navbar-nav .nav-link:hover i {
+    color: #C2185B !important; /* Set the hover color of all icons */
+}
+.logo {
+    width: 100px;
+    margin-right: 15px;
+}
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+</style>

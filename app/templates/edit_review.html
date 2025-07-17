@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Review</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            flex: 1;
+            max-width: 600px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            overflow: auto;
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #E91E63;
+        }
+        .btn-primary {
+            background-color: #E91E63;
+            border: none;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background-color: #C2185B;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #E91E63;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .divider {
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: #ddd;
+        }
+        .divider::before {
+            left: 0;
+        }
+        .divider::after {
+            right: 0;
+        }
+        .divider span {
+            background-color: white;
+            padding: 0 10px;
+            color: #888;
+        }
+        .star-rating {
+            color: #FFD700;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Edit Review</h1>
+        </div>
+        <form method="post">
+            <div class="form-group">
+                <label for="review_content">Review:</label>
+                <textarea id="review_content" name="review_content" class="form-control" required>{{ review.review_content }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="star_count">Rating:</label>
+                <select id="star_count" name="star_count" class="form-control" required>
+                    <option value="1" {% if review.star_count == 1 %}selected{% endif %}>1 Star ⭐</option>
+                    <option value="2" {% if review.star_count == 2 %}selected{% endif %}>2 Stars ⭐⭐</option>
+                    <option value="3" {% if review.star_count == 3 %}selected{% endif %}>3 Stars ⭐⭐⭐</option>
+                    <option value="4" {% if review.star_count == 4 %}selected{% endif %}>4 Stars ⭐⭐⭐⭐</option>
+                    <option value="5" {% if review.star_count == 5 %}selected{% endif %}>5 Stars ⭐⭐⭐⭐⭐</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Review</button>
+        </form>
+        <div class="footer">
+            <a href="{{ url_for('product.view_product', product_id=review.product_id) }}">Back to Product</a>
+        </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

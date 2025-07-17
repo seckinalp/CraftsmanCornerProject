@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Profile</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            overflow: auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .seller-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .seller-info img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+        .star-rating {
+            color: gold;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-group a {
+            margin: 5px;
+        }
+        .profile-details {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .profile-details .detail-item {
+            width: 45%;
+            margin-bottom: 10px;
+        }
+        .profile-details .detail-item i {
+            margin-right: 10px;
+            color: #E91E63;
+        }
+    </style>
+</head>
+<body>
+    {% include 'seller_navbar.html' %}
+    <div class="container">
+        <div class="header">
+            <h2>Welcome to {{ seller.business_name }}'s Shop</h2>
+        </div>
+        <div class="seller-info">
+            <h5>{{ seller.name }} {{ seller.surname }}
+                {% if seller.is_verified %}
+                    <i class="fas fa-check-circle text-success"></i>
+                {% else %}
+                    <i class="fas fa-times-circle text-danger"></i>
+                {% endif %}
+            </h5>
+            <p><strong>Business Address:</strong> {{ seller.business_address }}</p>
+            <p><strong>Bio:</strong> {{ seller.bio }}</p>
+            <p>
+                <strong>Average Rating:</strong>
+                <span class="star-rating">
+                    {% for i in range(5) %}
+                        {% if i < seller.average_rating|round %}
+                            <i class="fas fa-star"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+                ({{ seller.total_reviews }} reviews)
+            </p>
+        </div>
+        <div class="profile-details">
+            <div class="detail-item"><p><i class="fas fa-user"></i><strong>Username:</strong> {{ seller.username }}</p></div>
+            <div class="detail-item"><p><i class="fas fa-envelope"></i><strong>Email:</strong> {{ seller.email }}</p></div>
+            <div class="detail-item"><p><i class="fas fa-ban"></i><strong>Blocked:</strong> {{ 'Yes' if seller.is_blocked else 'No' }}</p></div>
+            <div class="detail-item"><p><i class="fas fa-wallet"></i><strong>Balance:</strong> {{ balance }}</p></div>
+            <div class="detail-item"><p><i class="fas fa-map-marker-alt"></i><strong>Address:</strong> {{ seller.contact_info_address }}</p></div>
+            <div class="detail-item"><p><i class="fas fa-phone"></i><strong>Phone Number:</strong> {{ seller.contact_info_phone_no }}</p></div>
+            <div class="detail-item"><p><i class="fas fa-id-card"></i><strong>Tax Number:</strong> {{ seller.tax_number }}</p></div>
+            <div class="detail-item"><p><i class="fas fa-map-marker-alt"></i><strong>Business Address:</strong> {{ seller.business_address }}</p></div>
+            <div class="detail-item"><p><i class="fas fa-briefcase"></i><strong>Business Name:</strong> {{ seller.business_name }}</p></div>
+            <div class="detail-item"><p><i class="fas fa-check-circle"></i><strong>Verified:</strong> {{ 'Yes' if seller.is_verified else 'No' }}</p></div>
+            <div class="detail-item"><p><i class="fas fa-info-circle"></i><strong>Bio:</strong> {{ seller.bio }}</p></div>
+        </div>
+        <div class="button-group">
+            <a href="{{ url_for('seller_dashboard') }}" class="btn btn-secondary">Back</a>
+            <a href="{{ url_for('profile.edit_seller_profile') }}" class="btn btn-primary">Edit Profile</a>
+        </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

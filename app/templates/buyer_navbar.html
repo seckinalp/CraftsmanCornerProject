@@ -1,0 +1,100 @@
+<!-- templates/buyer_navbar.html -->
+<nav class="buyer-navbar navbar navbar-expand-lg navbar-light bg-light">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <a class="buyer-navbar-brand" href="#">
+        <img src="{{ url_for('static', filename='logo3.png') }}" alt="Craftsman Corner Logo" class="buyer-logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#buyerNavbarNav" aria-controls="buyerNavbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="buyerNavbarNav">
+        <ul class="navbar-nav mr-auto">
+           
+            <li class="nav-item">
+                <a class="buyer-nav-link nav-link" href="{{ url_for('buyer_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="buyer-nav-link nav-link" href="{{ url_for('order.view_orders_buyer') }}"><i class="fas fa-clipboard-list"></i> My Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="buyer-nav-link nav-link" href="{{ url_for('order.view_cart') }}"><i class="fas fa-shopping-cart"></i> Shopping Cart</a>
+            </li>
+            <li class="nav-item">
+                <a class="buyer-nav-link nav-link" href="{{ url_for('profile.all_shops') }}"><i class="fas fa-store"></i> All Shops</a>
+            </li>
+            <li class="nav-item">
+                <a class="buyer-nav-link nav-link" href="{{ url_for('product.view_favorites') }}"><i class="fas fa-heart"></i> Favorites</a>
+            </li>
+            <li class="nav-item">
+                <a class="buyer-nav-link nav-link" href="{{ url_for('report.report') }}"><i class="fas fa-exclamation-triangle"></i> Report</a>
+            </li>
+            <li class="nav-item">
+                <a class="buyer-nav-link  nav-link" href="{{ url_for('report.view_reports') }}"><i class="fas fa-exclamation-triangle"></i> Submitted Reports</a>
+        </li>
+            <li class="nav-item">
+                <a class="buyer-nav-link  nav-link" href="{{ url_for('admin_bp.list_reports') }}" target="_blank"><i class="fas fa-chart-bar"></i> My System Analysis</a>
+            </li>
+     
+
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <span class="buyer-navbar-text">
+                    Balance: ${{ balance }}
+                    <a href="{{ url_for('add_balance') }}" class="buyer-btn btn btn-success btn-sm ml-2">+</a>
+                    <a href="{{ url_for('withdraw_balance') }}" class="btn btn-danger btn-sm ml-2">-</a>
+                </span>
+            </li>
+            <li class="nav-item">
+                <a class="buyer-nav-link nav-link" href="{{ url_for('profile.buyer_profile') }}"><i class="fas fa-user"></i> Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="buyer-nav-link nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"> </i>Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<style>
+    .buyer-navbar {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        margin-bottom: 20px;
+    }
+    .buyer-logo {
+        width: 100px;
+        height: auto;
+        margin-right: 10px;
+    }
+    .buyer-navbar-brand {
+        display: flex;
+        align-items: center;
+    }
+    .buyer-navbar-brand img {
+        margin-right: 10px;
+    }
+
+    .buyer-navbar .navbar-nav .nav-item {
+        margin-right: 7px;
+        font-size: 14px;
+    }
+    .buyer-nav-link {
+        color: #E91E63 !important;
+        font-weight: 500;
+    }
+    .buyer-nav-link:hover {
+        color: #E91E63 !important;
+    }
+    .buyer-navbar-text {
+        margin-right: 20px;
+        font-size: 16px;
+        font-weight: 500;
+          color: #E91E63 !important;
+    }
+    .buyer-btn-sm {
+        padding: .25rem .5rem;
+        font-size: .875rem;
+        line-height: 1.5;
+        border-radius: .2rem;
+    }
+</style>

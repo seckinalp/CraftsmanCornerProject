@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 1200px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 20px auto;
+        }
+        .navbar-nav .nav-link {
+            color: #E91E63 !important;
+            display: flex;
+            align-items: center;
+        }
+        .navbar-nav .nav-link i {
+            margin-right: 8px;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #C2185B !important;
+        }
+        .logo {
+            width: 100px;
+            margin-right: 15px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        form div {
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        form div label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        form div input[type="text"],
+        form div input[type="file"],
+        form div input[type="number"],
+        form div textarea,
+        form div select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        form textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        form input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #E91E63;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        form input[type="submit"]:hover {
+            background-color: #C2185B;
+        }
+        p {
+            text-align: center;
+            color: red;
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        img {
+            display: block;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .button-group a {
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+        .button-group a:hover {
+            background-color: #5a6268;
+        }
+        .button-group input[type="submit"] {
+            flex: 1;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include the seller's navbar -->
+    {% include "seller_navbar.html" %}
+    
+    <div class="container">
+        <div class="header">
+            <h2>Add Product</h2>
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="product_name">Product Name:</label>
+                    <input type="text" id="product_name" name="product_name" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="product_price">Product Price:</label>
+                    <input type="number" id="product_price" name="product_price" step="0.01" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="product_stock">Product Stock:</label>
+                    <input type="number" id="product_stock" name="product_stock" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="product_type">Product Type:</label>
+                    <input type="text" id="product_type" name="product_type" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="product_gender">Product Gender:</label>
+                    <select id="product_gender" name="product_gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="unisex adult">Unisex Adult</option>
+                        <option value="unisex kid">Unisex Kid</option>
+                        <option value="boy">Boy</option>
+                        <option value="girl">Girl</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="product_brand">Product Brand:</label>
+                    <input type="text" id="product_brand" name="product_brand" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="product_size">Product Size:</label>
+                    <input type="text" id="product_size" name="product_size" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="images">Product Images (up to 5):</label>
+                    <input type="file" id="images" name="images" multiple required>
+                </div>
+            </div>
+            <div>
+                <label for="product_description">Product Description:</label>
+                <textarea id="product_description" name="product_description" required></textarea>
+            </div>
+            <div class="button-group">
+                <a href="{{ url_for('seller_dashboard') }}" class="button">Back</a>
+                <input type="submit" value="Add Product">
+            </div>
+        </form>
+        <p>{{ message }}</p>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

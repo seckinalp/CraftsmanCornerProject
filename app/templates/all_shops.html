@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Shops</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 1200px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            overflow: auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .shop-card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'buyer_navbar.html' %}
+    <div class="container">
+        <div class="header">
+            <h2>All Shops</h2>
+        </div>
+        <div class="row">
+            {% for seller in sellers %}
+                <div class="col-md-4">
+                    <div class="card shop-card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ seller.business_name }}</h5>
+                            <p class="card-text">Username: {{ seller.username }}</p>
+                            <p class="card-text">Bio: {{ seller.bio }}</p>
+                            <p class="card-text">Verified: {{ 'Yes' if seller.is_verified else 'No' }}</p>
+                            <p class="card-text">Rating: {{ seller.average_rating }} ({{ seller.total_reviews }} reviews)</p>
+                            <a href="{{ url_for('profile.view_seller_profile', seller_id=seller.user_id) }}" class="btn btn-primary">View Shop</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
